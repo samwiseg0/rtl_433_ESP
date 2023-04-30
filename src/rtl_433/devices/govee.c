@@ -308,12 +308,6 @@ device.
 
 */
 
-typedef enum {
-    GOVEE_BUTTON_PRESS   = 0,
-    GOVEE_BATTERY_REPORT = 1,
-    GOVEE_WATER_LEAK     = 2,
-} govee_h5054_event_t;
-
 static int govee_h5054_decode(r_device *decoder, bitbuffer_t *bitbuffer)
 {
     if (bitbuffer->num_rows < 3) {
@@ -358,14 +352,14 @@ static int govee_h5054_decode(r_device *decoder, bitbuffer_t *bitbuffer)
     int leak_num = -1;
     int battery  = -1;
     switch (event) {
-    case GOVEE_BUTTON_PRESS:
+    case 0x0:
         event_str = "Button Press";
         break;
-    case GOVEE_BATTERY_REPORT:
+    case 0x1:
         event_str = "Battery Report";
         battery   = event_data;
         break;
-    case GOVEE_WATER_LEAK:
+    case 0x2:
         event_str = "Water Leak";
         leak_num  = event_data;
         break;
@@ -404,4 +398,6 @@ r_device const govee_h5054 = {
         .reset_limit = 9000, // Maximum gap size before End Of Message [us]
         .decode_fn   = &govee_h5054_decode,
         .fields      = output_fields,
+
+
 };
